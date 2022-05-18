@@ -3,11 +3,12 @@ package com.leords.dscatalog.resources;
 import com.leords.dscatalog.dto.CategoryDTO;
 import com.leords.dscatalog.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/categories")
@@ -17,8 +18,14 @@ public class CategoryResource {
     private CategoryService service;
     
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> findAllCategories() {
-        var categoriesList = service.findAllCategories();
+    public ResponseEntity<Page<CategoryDTO>> findAllCategories(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction,
+            @RequestParam(value = "orderBy", defaultValue = "name") String orderBy
+    ) {
+        var pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        var categoriesList = service.findAllCategories(pageRequest);
         return ResponseEntity.ok().body(categoriesList);
     }
     
@@ -49,7 +56,6 @@ public class CategoryResource {
     public ResponseEntity<Void> deleteCategory(@PathVariable(value = "id") Long id) {
         service.deleteCategory(id);
         return ResponseEntity.noContent().build();
-        
     }
     
 }
