@@ -4,8 +4,7 @@ import com.leords.dscatalog.dto.CategoryDTO;
 import com.leords.dscatalog.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -18,14 +17,8 @@ public class CategoryResource {
     private CategoryService service;
     
     @GetMapping
-    public ResponseEntity<Page<CategoryDTO>> findAllCategories(
-            @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
-            @RequestParam(value = "direction", defaultValue = "ASC") String direction,
-            @RequestParam(value = "orderBy", defaultValue = "name") String orderBy
-    ) {
-        var pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-        var categoriesList = service.findAllCategories(pageRequest);
+    public ResponseEntity<Page<CategoryDTO>> findAllCategories(Pageable pageable) {
+        var categoriesList = service.findAllCategories(pageable);
         return ResponseEntity.ok().body(categoriesList);
     }
     
