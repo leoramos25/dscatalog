@@ -3,6 +3,8 @@ package com.leords.dscatalog.dto;
 import com.leords.dscatalog.entities.Category;
 import com.leords.dscatalog.entities.Product;
 
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,8 +17,10 @@ public class ProductDTO implements Serializable {
     private Long id;
     private String name;
     private String description;
+    @Positive(message = "Price is positive")
     private Double price;
     private String imgUrl;
+    @PastOrPresent(message = "Product date cannot be future")
     private Instant date;
     private List<CategoryDTO> categories = new ArrayList<>();
     
