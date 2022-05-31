@@ -19,17 +19,17 @@ import javax.persistence.EntityNotFoundException;
 public class CategoryService {
     
     @Autowired
-    private CategoryRepository repository;
+    private CategoryRepository categoryRepository;
     
     @Transactional(readOnly = true)
     public Page<CategoryDTO> findAllCategories(Pageable pageable) {
-        var categoriesList = repository.findAll(pageable);
+        var categoriesList = categoryRepository.findAll(pageable);
         return categoriesList.map(CategoryDTO::new);
     }
     
     @Transactional(readOnly = true)
     public CategoryDTO findCategoryById(Long id) {
-        var category = repository.findById(id)
+        var category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
         return new CategoryDTO(category);
     }
@@ -38,16 +38,16 @@ public class CategoryService {
     public CategoryDTO createCategory(CategoryDTO dto) {
         var entity = new Category();
         entity.setName(dto.getName());
-        entity = repository.save(entity);
+        entity = categoryRepository.save(entity);
         return new CategoryDTO(entity);
     }
     
     @Transactional
     public CategoryDTO updateCategory(Long id, CategoryDTO dto) {
         try {
-            var entity = repository.getOne(id);
+            var entity = categoryRepository.getOne(id);
             entity.setName(dto.getName());
-            entity = repository.save(entity);
+            entity = categoryRepository.save(entity);
             return new CategoryDTO(entity);
         } catch (EntityNotFoundException error) {
             throw new ResourceNotFoundException("Id not found " + id);
@@ -56,7 +56,7 @@ public class CategoryService {
     
     public void deleteCategory(Long id) {
         try {
-            repository.deleteById(id);
+            categoryRepository.deleteById(id);
         } catch (EmptyResultDataAccessException error) {
             throw new ResourceNotFoundException("Id not found " + id);
         } catch (DataIntegrityViolationException error) {

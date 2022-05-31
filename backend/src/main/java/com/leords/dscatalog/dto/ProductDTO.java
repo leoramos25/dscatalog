@@ -3,8 +3,10 @@ package com.leords.dscatalog.dto;
 import com.leords.dscatalog.entities.Category;
 import com.leords.dscatalog.entities.Product;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,6 +17,8 @@ public class ProductDTO implements Serializable {
     
     private static final long serialVersionUID = -7172540041056521256L;
     private Long id;
+    @Size(min = 2, max = 60, message = "must have between 2 and 60 characters")
+    @NotBlank(message = "First name cannot be empty")
     private String name;
     private String description;
     @Positive(message = "Price is positive")

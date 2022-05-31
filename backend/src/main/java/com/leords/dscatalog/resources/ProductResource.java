@@ -16,23 +16,23 @@ import javax.validation.Valid;
 public class ProductResource {
     
     @Autowired
-    private ProductService service;
+    private ProductService productService;
     
     @GetMapping
     public ResponseEntity<Page<ProductDTO>> findAllProducts(Pageable pageable) {
-        var productDtoList = service.findAllProducts(pageable);
+        var productDtoList = productService.findAllProducts(pageable);
         return ResponseEntity.ok().body(productDtoList);
     }
     
     @GetMapping(value = "/{id}")
     public ResponseEntity<ProductDTO> findProductById(@PathVariable(value = "id") Long id) {
-        var productDto = service.findProductById(id);
+        var productDto = productService.findProductById(id);
         return ResponseEntity.ok().body(productDto);
     }
     
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO dto) {
-        dto = service.createProduct(dto);
+        dto = productService.createProduct(dto);
         var uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/id")
@@ -43,13 +43,13 @@ public class ProductResource {
     
     @PutMapping(value = "/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable(value = "id") Long id, @Valid @RequestBody ProductDTO dto) {
-        dto = service.updateProduct(id, dto);
+        dto = productService.updateProduct(id, dto);
         return ResponseEntity.ok().body(dto);
     }
     
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable(value = "id") Long id) {
-        service.deleteProduct(id);
+        productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
     

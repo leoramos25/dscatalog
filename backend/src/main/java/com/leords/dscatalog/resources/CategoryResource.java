@@ -14,23 +14,23 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class CategoryResource {
     
     @Autowired
-    private CategoryService service;
+    private CategoryService categoryService;
     
     @GetMapping
     public ResponseEntity<Page<CategoryDTO>> findAllCategories(Pageable pageable) {
-        var categoriesList = service.findAllCategories(pageable);
+        var categoriesList = categoryService.findAllCategories(pageable);
         return ResponseEntity.ok().body(categoriesList);
     }
     
     @GetMapping(value = "/{id}")
     public ResponseEntity<CategoryDTO> findCategoryById(@PathVariable(value = "id") Long id) {
-        var categoryDto = service.findCategoryById(id);
+        var categoryDto = categoryService.findCategoryById(id);
         return ResponseEntity.ok().body(categoryDto);
     }
     
     @PostMapping
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO dto) {
-        dto = service.createCategory(dto);
+        dto = categoryService.createCategory(dto);
         var uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -41,13 +41,13 @@ public class CategoryResource {
     
     @PutMapping(value = "/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable(value = "id") Long id, @RequestBody CategoryDTO dto) {
-        dto = service.updateCategory(id, dto);
+        dto = categoryService.updateCategory(id, dto);
         return ResponseEntity.ok().body(dto);
     }
     
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable(value = "id") Long id) {
-        service.deleteCategory(id);
+        categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
     }
     
