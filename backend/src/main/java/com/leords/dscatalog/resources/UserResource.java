@@ -1,6 +1,7 @@
 package com.leords.dscatalog.resources;
 
 import com.leords.dscatalog.dto.CreateUserDTO;
+import com.leords.dscatalog.dto.UpdateUserDTO;
 import com.leords.dscatalog.dto.UserDTO;
 import com.leords.dscatalog.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class UserResource {
     }
     
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UserDTO> updateUser(@Valid @PathVariable(value = "id") Long id, @RequestBody CreateUserDTO dto) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable(value = "id") Long id, @Valid @RequestBody UpdateUserDTO dto) {
         var userDto = userService.updateUser(id, dto);
         return ResponseEntity.ok().body(userDto);
     }

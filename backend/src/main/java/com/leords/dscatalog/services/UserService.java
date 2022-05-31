@@ -2,6 +2,7 @@ package com.leords.dscatalog.services;
 
 import com.leords.dscatalog.dto.CreateUserDTO;
 import com.leords.dscatalog.dto.RoleDTO;
+import com.leords.dscatalog.dto.UpdateUserDTO;
 import com.leords.dscatalog.dto.UserDTO;
 import com.leords.dscatalog.entities.User;
 import com.leords.dscatalog.repositories.RoleRepository;
@@ -51,7 +52,7 @@ public class UserService {
     }
     
     @Transactional
-    public UserDTO updateUser(Long id, CreateUserDTO dto) {
+    public UserDTO updateUser(Long id, UpdateUserDTO dto) {
         try {
             var entity = userRepository.getOne(id);
             copyDtoToEntity(dto, entity);
