@@ -1,6 +1,6 @@
 package com.leords.dscatalog.repositories;
 
-import com.leords.dscatalog.tests.Factory;
+import com.leords.dscatalog.tests.ProductFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ class ProductRepositoryTest {
     
     @Test
     void saveShouldPersistWithAutoincrementWhenIdIsNull() {
-        var product = Factory.createProduct();
+        var product = ProductFactory.createProduct();
         
         product.setId(null);
         product = repository.save(product);

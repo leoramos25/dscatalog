@@ -7,7 +7,7 @@ import com.leords.dscatalog.repositories.CategoryRepository;
 import com.leords.dscatalog.repositories.ProductRepository;
 import com.leords.dscatalog.services.exceptions.DatabaseException;
 import com.leords.dscatalog.services.exceptions.ResourceNotFoundException;
-import com.leords.dscatalog.tests.Factory;
+import com.leords.dscatalog.tests.ProductFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,9 +53,9 @@ class ProductServiceTest {
         existingId = 1L;
         nonExistsId = 0L;
         dependentId = 4L;
-        product = Factory.createProduct();
-        productDto = Factory.createProductDTO();
-        category = Factory.createCategory();
+        product = ProductFactory.createProduct();
+        productDto = ProductFactory.createProductDTO();
+        category = ProductFactory.createCategory();
         page = new PageImpl<>(List.of(product));
         
         when(productRepository.findAll((Pageable) any())).thenReturn(page);

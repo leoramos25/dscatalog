@@ -1,7 +1,7 @@
 package com.leords.dscatalog.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leords.dscatalog.tests.Factory;
+import com.leords.dscatalog.tests.ProductFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ class ProductResourceIntegrationTest {
     
     @Test
     void updateProductShouldReturnProductDTOWhenIdExist() throws Exception {
-        var productDto = Factory.createProductDTO();
+        var productDto = ProductFactory.createProductDTO();
         var jsonBody = objectMapper.writeValueAsString(productDto);
         var expectedProductDtoId = productDto.getId();
         
@@ -74,7 +74,7 @@ class ProductResourceIntegrationTest {
     
     @Test
     void updateProductShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
-        var productDto = Factory.createProductDTO();
+        var productDto = ProductFactory.createProductDTO();
         var jsonBody = objectMapper.writeValueAsString(productDto);
         
         var resultActions = mockMvc.perform(put("/products/{id}", nonExistId)

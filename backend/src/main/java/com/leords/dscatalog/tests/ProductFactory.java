@@ -6,7 +6,7 @@ import com.leords.dscatalog.entities.Product;
 
 import java.time.Instant;
 
-public class Factory {
+public class ProductFactory {
     
     public static Product createProduct() {
         var product = new Product(

@@ -5,7 +5,7 @@ import com.leords.dscatalog.dto.ProductDTO;
 import com.leords.dscatalog.services.ProductService;
 import com.leords.dscatalog.services.exceptions.DatabaseException;
 import com.leords.dscatalog.services.exceptions.ResourceNotFoundException;
-import com.leords.dscatalog.tests.Factory;
+import com.leords.dscatalog.tests.ProductFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ class ProductResourceTest {
         existingId = 1L;
         nonExistingId = 0L;
         dependentId = 3L;
-        productDto = Factory.createProductDTO();
+        productDto = ProductFactory.createProductDTO();
         page = new PageImpl<>(List.of(productDto));
         
         when(service.findAllProducts(any())).thenReturn(page);
