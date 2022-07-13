@@ -51,7 +51,7 @@ class ProductResourceTest {
         productDto = ProductFactory.createProductDTO();
         page = new PageImpl<>(List.of(productDto));
         
-        when(service.findAllProducts(any())).thenReturn(page);
+        when(service.findAllProducts(anyLong(), any())).thenReturn(page);
         
         when(service.findProductById(existingId)).thenReturn(productDto);
         when(service.findProductById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
@@ -101,7 +101,7 @@ class ProductResourceTest {
                 .content(jsonBody)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
-    
+        
         resultActions.andExpect(status().isCreated());
         resultActions.andExpect(jsonPath("$.id").exists());
         resultActions.andExpect(jsonPath("$.name").exists());

@@ -23,6 +23,7 @@ class ProductServiceIntegrationTest {
     private ProductRepository repository;
     
     private Long existingId;
+    private Long categoryId;
     private Long nonExistingId;
     private Long countTotalProducts;
     
@@ -31,13 +32,14 @@ class ProductServiceIntegrationTest {
         existingId = 1L;
         nonExistingId = 0L;
         countTotalProducts = 25L;
+        categoryId = 1L;
     }
     
     @Test
     void findAllProductShouldReturnPageWhenPage0Size10() {
         var pageRequest = PageRequest.of(0, 10);
         
-        var result = service.findAllProducts(pageRequest);
+        var result = service.findAllProducts(categoryId, pageRequest);
         
         assertFalse(result.isEmpty());
         assertEquals(0, result.getNumber());
@@ -49,7 +51,7 @@ class ProductServiceIntegrationTest {
     void findAllProductsShouldReturnEmptyPageWhenPageDoesNotExist() {
         var pageRequest = PageRequest.of(50, 10);
         
-        var result = service.findAllProducts(pageRequest);
+        var result = service.findAllProducts(categoryId, pageRequest);
         
         assertTrue(result.isEmpty());
     }
@@ -58,7 +60,7 @@ class ProductServiceIntegrationTest {
     void findAllProductsShouldReturnOrderedPageWhenSortByName() {
         var pageRequest = PageRequest.of(0, 10, Sort.by("name"));
         
-        var result = service.findAllProducts(pageRequest);
+        var result = service.findAllProducts(categoryId, pageRequest);
         
         assertFalse(result.isEmpty());
         assertEquals("Macbook Pro", result.getContent().get(0).getName());

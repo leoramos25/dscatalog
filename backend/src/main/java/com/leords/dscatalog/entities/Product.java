@@ -10,7 +10,6 @@ import java.util.Set;
 @Entity
 @Table(name = "tb_product")
 public class Product implements Serializable {
-    
     private static final long serialVersionUID = 5262601004006593246L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -106,5 +105,4 @@ public class Product implements Serializable {
     public int hashCode() {
         return Objects.hash(getId());
     }
-    
 }

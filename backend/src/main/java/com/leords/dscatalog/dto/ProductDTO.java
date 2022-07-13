@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Set;
 
 public class ProductDTO implements Serializable {
-    
     private static final long serialVersionUID = -7172540041056521256L;
+    
     private Long id;
     @Size(min = 2, max = 60, message = "must have between 2 and 60 characters")
     @NotBlank(message = "First name cannot be empty")
@@ -105,5 +105,4 @@ public class ProductDTO implements Serializable {
     public List<CategoryDTO> getCategories() {
         return categories;
     }
-    
 }

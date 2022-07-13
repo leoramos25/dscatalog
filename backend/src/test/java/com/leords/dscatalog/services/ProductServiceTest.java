@@ -79,7 +79,7 @@ class ProductServiceTest {
     @Test
     void findAllProductsShouldReturnOnePage() {
         var pageable = PageRequest.of(0, 10);
-        var products = service.findAllProducts(pageable);
+        var products = service.findAllProducts(category.getId(), pageable);
         
         assertNotNull(products);
         assertEquals(products.getTotalPages(), 1);
