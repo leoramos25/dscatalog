@@ -15,7 +15,7 @@ public class ProductFactory {
                 "Good phone",
                 800.00,
                 "http://img.com/img.png",
-                Instant.parse("2022-10-20T03:00:00Z")
+                Instant.parse("2022-07-12T03:00:00Z")
         );
         
         product.getCategories().add(new Category(2L, "Electronics"));

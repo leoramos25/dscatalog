@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
@@ -60,6 +61,8 @@ class ProductServiceTest {
         
         when(productRepository.findAll((Pageable) any())).thenReturn(page);
         
+        when(productRepository.search(any(), any(), any())).thenReturn(page);
+        
         when(productRepository.save(any())).thenReturn(product);
         
         when(productRepository.findById(existingId)).thenReturn(Optional.of(product));
@@ -78,12 +81,11 @@ class ProductServiceTest {
     
     @Test
     void findAllProductsShouldReturnOnePage() {
-        var pageable = PageRequest.of(0, 10);
-        var products = service.findAllProducts(category.getId(), pageable);
+        var pageable = PageRequest.of(0, 12);
+        var products = service.findAllProducts(0L, "", pageable);
         
         assertNotNull(products);
-        assertEquals(products.getTotalPages(), 1);
-        verify(productRepository, times(1)).findAll(pageable);
+        assertEquals(1, products.getTotalPages());
     }
     
     @Test

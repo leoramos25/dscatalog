@@ -6,10 +6,12 @@ import com.leords.dscatalog.services.ProductService;
 import com.leords.dscatalog.services.exceptions.DatabaseException;
 import com.leords.dscatalog.services.exceptions.ResourceNotFoundException;
 import com.leords.dscatalog.tests.ProductFactory;
+import com.leords.dscatalog.tests.TokenUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
@@ -24,7 +26,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ProductResource.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class ProductResourceTest {
     
     @Autowired
@@ -32,6 +35,9 @@ class ProductResourceTest {
     
     @Autowired
     private ObjectMapper objectMapper;
+    
+    @Autowired
+    private TokenUtil tokenUtil;
     
     @MockBean
     private ProductService service;
@@ -42,16 +48,21 @@ class ProductResourceTest {
     private long existingId;
     private long nonExistingId;
     private long dependentId;
+    private String username;
+    private String password;
     
     @BeforeEach()
     void setup() {
+        username = "maria@gmail.com";
+        password = "123456";
+        
         existingId = 1L;
         nonExistingId = 0L;
         dependentId = 3L;
         productDto = ProductFactory.createProductDTO();
         page = new PageImpl<>(List.of(productDto));
         
-        when(service.findAllProducts(anyLong(), any())).thenReturn(page);
+        when(service.findAllProducts(any(), any(), any())).thenReturn(page);
         
         when(service.findProductById(existingId)).thenReturn(productDto);
         when(service.findProductById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
@@ -113,9 +124,11 @@ class ProductResourceTest {
     
     @Test
     void updateProductShouldReturnProductDtoWhenIdExist() throws Exception {
+        var accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
         var jsonBody = objectMapper.writeValueAsString(productDto);
         
         var resultActions = mockMvc.perform(put("/products/{id}", existingId)
+                .header("Authorization", "Bearer " + accessToken)
                 .content(jsonBody)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
@@ -131,7 +144,9 @@ class ProductResourceTest {
     
     @Test
     void deleteProductShouldDoesNothingWhenIdExist() throws Exception {
-        var resultActions = mockMvc.perform(delete("/products/{id}", existingId));
+        var accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+        var resultActions = mockMvc.perform(delete("/products/{id}", existingId)
+                .header("Authorization", "Bearer " + accessToken));
         
         resultActions.andExpect(status().isNoContent());
         verify(service, times(1)).deleteProduct(existingId);
@@ -139,7 +154,9 @@ class ProductResourceTest {
     
     @Test
     void deleteProductShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() throws Exception {
-        var resultActions = mockMvc.perform(delete("/products/{id}", nonExistingId));
+        var accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+        var resultActions = mockMvc.perform(delete("/products/{id}", nonExistingId)
+                .header("Authorization", "Bearer " + accessToken));
         
         resultActions.andExpect(status().isNotFound());
         verify(service, times(1)).deleteProduct(nonExistingId);
@@ -147,7 +164,9 @@ class ProductResourceTest {
     
     @Test
     void deleteProductShouldThrowDatabaseExceptionWhenDependentId() throws Exception {
-        var resultActions = mockMvc.perform(delete("/products/{id}", dependentId));
+        var accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+        var resultActions = mockMvc.perform(delete("/products/{id}", dependentId)
+                .header("Authorization", "Bearer " + accessToken));
         
         resultActions.andExpect(status().isBadRequest());
         verify(service, times(1)).deleteProduct(dependentId);

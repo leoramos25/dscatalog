@@ -39,7 +39,7 @@ class ProductServiceIntegrationTest {
     void findAllProductShouldReturnPageWhenPage0Size10() {
         var pageRequest = PageRequest.of(0, 10);
         
-        var result = service.findAllProducts(categoryId, pageRequest);
+        var result = service.findAllProducts(0L, "", pageRequest);
         
         assertFalse(result.isEmpty());
         assertEquals(0, result.getNumber());
@@ -51,7 +51,7 @@ class ProductServiceIntegrationTest {
     void findAllProductsShouldReturnEmptyPageWhenPageDoesNotExist() {
         var pageRequest = PageRequest.of(50, 10);
         
-        var result = service.findAllProducts(categoryId, pageRequest);
+        var result = service.findAllProducts(0L, "", pageRequest);
         
         assertTrue(result.isEmpty());
     }
@@ -60,7 +60,7 @@ class ProductServiceIntegrationTest {
     void findAllProductsShouldReturnOrderedPageWhenSortByName() {
         var pageRequest = PageRequest.of(0, 10, Sort.by("name"));
         
-        var result = service.findAllProducts(categoryId, pageRequest);
+        var result = service.findAllProducts(0L,"", pageRequest);
         
         assertFalse(result.isEmpty());
         assertEquals("Macbook Pro", result.getContent().get(0).getName());

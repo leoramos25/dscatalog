@@ -2,6 +2,7 @@ package com.leords.dscatalog.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leords.dscatalog.tests.ProductFactory;
+import com.leords.dscatalog.tests.TokenUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,20 @@ class ProductResourceIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
     
+    @Autowired
+    private TokenUtil tokenUtil;
+    
     private Long existingId;
     private Long nonExistId;
     private Long countTotalProducts;
+    private String username;
+    private String password;
     
     @BeforeEach
-    void setup() {
+    void setup() throws Exception {
+        username = "maria@gmail.com";
+        password = "123456";
+        
         existingId = 1L;
         nonExistId = 0L;
         countTotalProducts = 25L;
@@ -41,8 +50,9 @@ class ProductResourceIntegrationTest {
     
     @Test
     void findAllProductsShouldReturnSortedPageWhenSortByName() throws Exception {
-        var resultActions = mockMvc.perform(get("/products?page=0&size=12&direction=ASC&sort=name,ASC")
-                .accept(MediaType.APPLICATION_JSON));
+        var resultActions = mockMvc
+                .perform(get("/products?page=0&size=12&direction=ASC&sort=name,ASC")
+                        .accept(MediaType.APPLICATION_JSON));
         
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(jsonPath("$.totalElements").value(countTotalProducts));
@@ -57,11 +67,13 @@ class ProductResourceIntegrationTest {
         var productDto = ProductFactory.createProductDTO();
         var jsonBody = objectMapper.writeValueAsString(productDto);
         var expectedProductDtoId = productDto.getId();
+        var accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
         
-        var resultActions = mockMvc.perform(put("/products/{id}", existingId)
-                .content(jsonBody)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
+        var resultActions = mockMvc
+                .perform(put("/products/{id}", existingId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .content(jsonBody).contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
         
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(jsonPath("$.id").value(expectedProductDtoId));
@@ -74,12 +86,13 @@ class ProductResourceIntegrationTest {
     
     @Test
     void updateProductShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+        var accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
         var productDto = ProductFactory.createProductDTO();
         var jsonBody = objectMapper.writeValueAsString(productDto);
         
         var resultActions = mockMvc.perform(put("/products/{id}", nonExistId)
-                .content(jsonBody)
-                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + accessToken)
+                .content(jsonBody).contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
         
         resultActions.andExpect(status().isNotFound());
