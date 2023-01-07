@@ -6,8 +6,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.4</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>3.0.1</version>
+        <relativePath/>
     </parent>
     <groupId>com.devsuperior</groupId>
     <artifactId>dscatalog</artifactId>
@@ -16,8 +16,9 @@
     <description>DSCatalog Bootcamp DevSuperior</description>
 
     <properties>
-        <java.version>11</java.version>
-        <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
+        <java.version>17</java.version>
+        <spring-cloud.version>2022.0.0</spring-cloud.version>
+        <lombok.version>1.18.24</lombok.version>
     </properties>
 
     <dependencies>
@@ -37,11 +38,11 @@
             <scope>runtime</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.postgresql</groupId>-->
+<!--            <artifactId>postgresql</artifactId>-->
+<!--            <scope>runtime</scope>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -67,9 +68,12 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.security.oauth.boot</groupId>
-            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
+
     </dependencies>
 
     <build>
