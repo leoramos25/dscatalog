@@ -1,0 +1,25 @@
+version: '3.9'
+
+networks:
+  leords-dev:
+    ipam:
+      config:
+        - subnet: 10.8.0.0/27
+
+volumes:
+  database:
+
+services:
+  database:
+    container_name: catalog-database
+    image: postgres
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: catalog
+    networks:
+      - leords-dev
+    volumes:
+      - database:/data/postgres
